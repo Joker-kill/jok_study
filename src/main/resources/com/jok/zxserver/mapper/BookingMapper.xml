@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jok.zxserver.mapper.BookingMapper">
+    <resultMap id="bookingVOResultMap" type="com.jok.zxserver.domain.VO.BookingVO">
+        <id property="id" column="id"/>
+        <result property="reservationId" column="reservation_id"/>
+        <result property="name" column="name"/>
+        <result property="bookStart" column="book_start"/>
+        <result property="bookEnd" column="book_end"/>
+        <result property="message" column="message"/>
+        <result property="sex" column="sex"/>
+        <result property="phone" column="phone"/>
+        <result property="date" column="date"/>
+        <result property="status" column="status"/>
+        <result property="backMessage" column="back_message"/>
+        <result property="consultantName" column="consultant_name"/>
+        <result property="consultantAvatar" column="avatar"/>
+
+    </resultMap>
+
+
+    <!-- 你的Mapper XML文件 -->
+    <select id="selectBookingsByCIdAndTime" resultType="com.jok.zxserver.domain.VO.BookingVO">
+        SELECT id,
+               reservation_id,
+               name,
+               book_start,
+               book_end,
+               message,
+               sex,
+               phone, date, status, back_message
+        FROM booking
+        WHERE consultant_id = #{consultantId}
+          AND (
+            (book_start
+         &gt; #{startTime}
+          AND book_start
+         &lt; #{endTime})
+           OR
+            (book_end
+         &gt; #{startTime}
+          AND book_end
+         &lt; #{endTime})
+            )
+
+    </select>
+    <select id="selectBookingsByCondition" resultMap="bookingVOResultMap">
+        SELECT a.id,
+               a.reservation_id,
+               a.name,
+               a.book_start,
+               a.book_end,
+               a.message,
+               a.sex,
+               a.phone,
+               a.date,
+               a.consultant_id,
+               a.status,
+               a.back_message,
+               a.booking_date,
+               b.name as consultant_name,
+               b.avatar
+        FROM booking a LEFT JOIN consultant b
+        ON a.consultant_id = b.id
+        <where>
+            <if test="dateStart != null and dateStart.trim() !=''">
+                a.date >= #{dateStart}
+            </if>
+            <if test="dateEnd != null and dateEnd.trim() !=''">
+                AND a.date &lt;= #{dateEnd}
+            </if>
+            <if test="consultantId != null">
+                AND a.consultant_id = #{consultantId}
+            </if>
+            <if test="reservationId != null and reservationId.trim() !=''">
+                AND a.reservation_id = #{reservationId}
+            </if>
+            <if test="status != null">
+                AND a.status = #{status}
+            </if>
+            <if test="uName != null and uName.trim() !=''">
+                AND a.name == #{uName}
+            </if>
+            <if test="cName != null and cName.trim() !=''">
+                AND b.name = #{cName}
+            </if>
+        </where>
+
+
+    </select>
+
+</mapper>
