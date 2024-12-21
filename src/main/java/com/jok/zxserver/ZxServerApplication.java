@@ -1,10 +1,12 @@
 package com.jok.zxserver;
 
+import com.anwen.mongo.config.OverrideMongoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootApplication
+//@SpringBootApplication
+@SpringBootApplication(exclude = OverrideMongoConfiguration.class)
 public class ZxServerApplication {
 
 	public static void main(String[] args) {

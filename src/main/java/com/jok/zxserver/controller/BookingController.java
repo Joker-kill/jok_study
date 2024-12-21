@@ -51,4 +51,9 @@ public class BookingController {
         return R.ok("删除成功");
     }
 
+
+    // TODO 根据咨询师id查询指定状态预约记录
+
+    //
+
 }

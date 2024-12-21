@@ -32,41 +32,12 @@ public class ConsultantController {
 
     @GetMapping("/online")
     public R<List<ConsultantVO>> getOnlineConsultants() {
-//        List<Consultant> consultantList = consultantService.list();
-//        List<ConsultantVO> consultantVOList = new ArrayList<>();
-//        for (Consultant c:consultantList){
-//            ConsultantVO consultantVO = new ConsultantVO();
-//            BeanUtils.copyProperties(c,consultantVO);
-//            consultantVOList.add(consultantVO);
-//        }
         return R.ok(consultantService.getOnlineConsultantList());
     }
 
     @PostMapping("/schedule")
     public R<String> addOrUpdateSchedule(@RequestBody ScheduleDO scheduleDO) {
         List<Schedule> changedScheduleList = scheduleDO.getChangedScheduleList();
-//        Integer consultantId = scheduleDO.getConsultantId();
-//
-//        Set<Map.Entry<String, List<HashMap<String, Object>>>> entries = scheduleMap.entrySet();
-//        List<Schedule> scheduleList = new ArrayList<>();
-//        for(Map.Entry<String, List<HashMap<String, Object>>> s:entries){
-//            String key = s.getKey();
-//            List<HashMap<String, Object>> value = s.getValue();
-//            System.out.println(value);
-//            for(HashMap<String, Object> v: value){
-//                Schedule schedule = new Schedule();
-//
-//                schedule.setStatus(Boolean.valueOf(String.valueOf(v.get("status")))?1:0);
-//                System.out.println(schedule.getStatus());
-//                schedule.setId(commonUtil.nextId());
-//                schedule.setDate(key);
-//                schedule.setTimeStart((String) v.get("start"));
-//                schedule.setTimeEnd((String) v.get("end"));
-//                schedule.setConsultantId(consultantId);
-//                scheduleList.add(schedule);
-//            }
-//        }
-
         for (Schedule s : changedScheduleList) {
             System.out.println(s);
         }
@@ -74,7 +45,7 @@ public class ConsultantController {
         return R.ok("成功");
     }
 
-    @GetMapping("/getSchedule")
+    @GetMapping("/getAllSchedule")
     public R<HashMap<String, List<Schedule>>> getSchedule(@RequestParam("cid") String cid) {
         System.out.println(cid);
         HashMap<String, List<Schedule>> scheduleByConsultantId = scheduleService.getScheduleByConsultantId(Integer.valueOf(cid));
@@ -82,6 +53,13 @@ public class ConsultantController {
         return R.ok(scheduleByConsultantId);
     }
 
+    @GetMapping("getEffectiveSchedule")
+    public R<HashMap<String, List<Schedule>>> getEffectiveSchedule(@RequestParam("cid") String cid) {
+
+        HashMap<String, List<Schedule>> scheduleByConsultantId = scheduleService.getScheduleByConsultantId(Integer.valueOf(cid),null);
+        System.out.println(scheduleByConsultantId);
+        return R.ok(scheduleByConsultantId);
+    }
     @DeleteMapping
     public R<String> deleteSchedule(String sid) {
         boolean b = scheduleService.removeScheduleById(sid);

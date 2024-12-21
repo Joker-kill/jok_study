@@ -64,8 +64,33 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleMapper, Schedule> i
         queryWrapper.eq("consultant_id", cid);
         queryWrapper.ne("deleted",1);
         List<Schedule> scheduleList = scheduleMapper.selectList(queryWrapper);
+        HashMap<String, List<Schedule>> scheduleMap = getStringListHashMap(scheduleList);
+        return scheduleMap;
+    }
+
+    @Override
+    public HashMap<String, List<Schedule>> getScheduleByConsultantId(Integer cid, String date) {
+        if(date == null || date == ""){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            date = simpleDateFormat.format(new Date());
+        }
+        QueryWrapper<Schedule> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("consultant_id", cid);
+        queryWrapper.ne("deleted",1);
+        queryWrapper.ge("date",date);
+        List<Schedule> scheduleList = scheduleMapper.selectList(queryWrapper);
+        HashMap<String, List<Schedule>> scheduleMap = getStringListHashMap(scheduleList);
+        return scheduleMap;
+    }
+
+    /**
+     * 组装数据
+     * @param scheduleList
+     * @return
+     */
+    private HashMap<String, List<Schedule>> getStringListHashMap(List<Schedule> scheduleList) {
         HashMap<String, List<Schedule>> scheduleMap = new HashMap<>();
-        for(Schedule s:scheduleList){
+        for(Schedule s: scheduleList){
             String date = s.getDate();
             List<Schedule> schedules = scheduleMap.get(date);
             if(scheduleMap.get(date)==null){
@@ -80,11 +105,9 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleMapper, Schedule> i
         return scheduleMap;
     }
 
-    @Override
-    public HashMap<String, List<Schedule>> getScheduleByConsultantId(Integer cid, String Date) {
 
-        return null;
-    }
+
+
 
     @Override
     @Transactional
