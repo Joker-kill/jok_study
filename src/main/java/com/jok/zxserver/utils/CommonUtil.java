@@ -2,6 +2,7 @@ package com.jok.zxserver.utils;
 
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -61,7 +62,6 @@ public class CommonUtil {
         return timestamp;
     }
 
-
     public static Map<String,String> getAppInfo() throws IOException {
         Properties properties = new Properties();
         properties.load(CommonUtil.class.getClassLoader().getResourceAsStream("wxUniappConfig.properties"));
@@ -79,4 +79,17 @@ public class CommonUtil {
         String minutes = parts[1];
         return hours + ":" + minutes;
     }
+
+    // 定义字符集
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final SecureRandom RANDOM = new SecureRandom();
+    // 生成指定长度的随机ID
+    public static String generateId(int length) {
+        StringBuilder id = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            id.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
+        }
+        return id.toString();
+    }
+
 }

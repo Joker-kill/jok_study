@@ -1,8 +1,13 @@
 package com.jok.zxserver.controller;
 
+import com.jok.zxserver.domain.DO.QuestionTestDO;
 import com.jok.zxserver.domain.R;
+import com.jok.zxserver.domain.VO.QuestionTestSimple;
+import com.jok.zxserver.domain.entity.question.QuestionTest;
+import com.jok.zxserver.service.QuestionTestService;
 import com.jok.zxserver.utils.QuestionExportModule;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author JOKER
@@ -57,20 +64,49 @@ public class QuestionTestController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     }
-
+    @Autowired
+    QuestionTestService questionTestService;
     @PostMapping("/uploadQuestionModule")
-    public ResponseEntity<String> handleUploadModule(@RequestParam("file") MultipartFile file){
-
+    public ResponseEntity<String> handleUploadModule(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam("createTime") String createTime,
+            @RequestParam("author") String author
+    ){
+        QuestionTestDO questionTestDO = new QuestionTestDO(name,description,createTime,author);
         if (file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("请上传文件");
         }
         try {
             InputStream inputStream = file.getInputStream();
-            QuestionExportModule.readExcel(inputStream);
+            questionTestService.createQuestionTest(questionTestDO,inputStream);
             return ResponseEntity.ok("文件上传成功: " + file.getOriginalFilename());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("文件上传失败");
         }
     }
+
+    @GetMapping("/getSimple")
+    public R<List<QuestionTestSimple>> getQuestionTestSimpleList(){
+        List<QuestionTest> questionTestList = questionTestService.getQuestionTestList();
+        List<QuestionTestSimple> questionTestSimples = new ArrayList<>();
+        for (QuestionTest q:questionTestList){
+            QuestionTestSimple questionTestSimple = new QuestionTestSimple();
+            questionTestSimple.setTitle(q.getName());
+            questionTestSimple.setId(q.getId());
+            questionTestSimple.setDesc(q.getDescription());
+            questionTestSimples.add(questionTestSimple);
+        }
+        return R.ok(questionTestSimples);
+    }
+
+    @GetMapping("getById")
+    public R<QuestionTest> getQuestionById(@RequestParam String id){
+        QuestionTest questionTest = questionTestService.getById(id);
+        return R.ok(questionTest);
+    }
+
+
 }

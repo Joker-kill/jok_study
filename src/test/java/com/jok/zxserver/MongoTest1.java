@@ -1,8 +1,8 @@
 package com.jok.zxserver;
 
-import com.jok.zxserver.domain.entity.Answer;
-import com.jok.zxserver.domain.entity.Question;
-import com.jok.zxserver.domain.entity.QuestionTest;
+import com.jok.zxserver.domain.entity.question.Answer;
+import com.jok.zxserver.domain.entity.question.Question;
+import com.jok.zxserver.domain.entity.question.QuestionTest;
 import com.jok.zxserver.service.QuestionTestService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

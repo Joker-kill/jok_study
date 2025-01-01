@@ -1,4 +1,7 @@
-package com.jok.zxserver.domain.entity;
+package com.jok.zxserver.domain.entity.question;
+
+import com.anwen.mongo.annotation.ID;
+import com.anwen.mongo.enums.IdTypeEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,10 +18,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Question {
+    @ID(type = IdTypeEnum.ASSIGN_ULID)
     private String id;
-    private int no;
+    private Integer no;
     private String questionContent;
     private String type;// todo 改成枚举类
-    private int unityNo;
+    private Integer unityNo;
     private List<Answer> answerCollection;
 }

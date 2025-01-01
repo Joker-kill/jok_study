@@ -1,4 +1,4 @@
-package com.jok.zxserver.domain.entity;
+package com.jok.zxserver.domain.entity.question;
 
 import com.anwen.mongo.annotation.ID;
 import com.anwen.mongo.annotation.collection.CollectionName;

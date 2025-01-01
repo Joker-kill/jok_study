@@ -2,7 +2,7 @@ package com.jok.zxserver.service;
 
 import com.anwen.mongo.service.IService;
 import com.jok.zxserver.domain.DO.QuestionTestDO;
-import com.jok.zxserver.domain.entity.QuestionTest;
+import com.jok.zxserver.domain.entity.question.QuestionTest;
 
 import java.io.InputStream;
 import java.util.List;
